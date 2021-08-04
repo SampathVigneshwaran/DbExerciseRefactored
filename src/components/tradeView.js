@@ -1,5 +1,9 @@
 import React from 'react';
 import axios from 'axios'
+import {AgGridColumn, AgGridReact} from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import serviceUrl from '../utils/config'
 
 
 class TradeViewComponent extends React.Component {
@@ -13,8 +17,7 @@ class TradeViewComponent extends React.Component {
     }
 
     getService(){
-        axios.get('http://localhost:8080/trade').then(res => {
-            console.log(res);
+        axios.get(serviceUrl).then(res => {
             this.setState({ trade: res.data})
         });
     }
@@ -33,41 +36,25 @@ class TradeViewComponent extends React.Component {
     render (){
         return (
             <div>
-                <h1 className = "text-center"> Trade List</h1>
-                <input type="submit" value="View" onClick = {this.handleClick}/>
-                <table className = "table table-striped">
-                    <thead>
-                        <tr>
+                <div className="textDiv">
+                    <h1 className = "text-center"> Trade List</h1>
+                    <input type="submit" value="View" onClick = {this.handleClick}/>
+                </div>
+            <div className="tradeViewDiv">
 
-                            <td> Trade Id</td>
-                            <td> Version</td>
-                            <td> Counterparty</td>
-                            <td> Book Id</td>
-                            <td> Maturity Date</td>
-                            <td> Creation Date</td>
-                            <td> Expired</td>
-                        </tr>
-
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.trade.map(
-                                trade => 
-                                <tr key = {trade.tradeId}>
-                                     <td> {trade.tradeId}</td>
-                                     <td> {trade.version}</td>   
-                                     <td> {trade.counterParty}</td>   
-                                     <td> {trade.bookId}</td>   
-                                     <td> {trade.maturityDate}</td>  
-                                     <td> {trade.creationDate}</td>  
-                                     <td> {trade.expired}</td>   
-                                </tr>
-                            )
-                        }
-
-                    </tbody>
-                </table>
-
+            <div className="ag-theme-alpine" style={{height: 400, width: 1400}}>
+                <AgGridReact
+                    rowData={this.state.trade}>
+                    <AgGridColumn field="tradeId"></AgGridColumn>
+                    <AgGridColumn field="version"></AgGridColumn>
+                    <AgGridColumn field="counterParty"></AgGridColumn>
+                    <AgGridColumn field="bookId"></AgGridColumn>
+                    <AgGridColumn field="maturityDate"></AgGridColumn>
+                    <AgGridColumn field="creationDate"></AgGridColumn>
+                    <AgGridColumn field="expired" ></AgGridColumn>
+                </AgGridReact>
+                </div>
+            </div>
             </div>
 
         )
